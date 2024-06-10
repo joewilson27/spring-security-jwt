@@ -140,7 +140,12 @@ public class SecurityConfig {
   }
 
   // Use this approach and bean context will automatically detect CustomUserDetails as service that implements UserDetailsService and use it
-  // when configuring the AuthenticationManager 
+  // when configuring the AuthenticationManager
+  /**
+   * So this is IMPORTANT, look at the login method in AuthController, they're using AuthenticationManager to check the user logins
+   * and the user login will matched from the userdetails that we are checked in CustomUserDetailsService in method loadUserByUsername()
+   * 
+   */ 
   @Bean
   public AuthenticationManager authenticationManager(
     AuthenticationConfiguration authenticationConfiguration) throws Exception {
