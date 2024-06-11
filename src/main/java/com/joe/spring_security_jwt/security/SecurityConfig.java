@@ -81,8 +81,7 @@ public class SecurityConfig {
         )
         // end handling JWT authentication
         .authorizeHttpRequests( auth ->
-          auth.requestMatchers("/api/auth/**").permitAll()
-              .requestMatchers("/api/test/**").permitAll()
+          auth.requestMatchers("/api/auth/**", "/public/**").permitAll()
               .anyRequest().authenticated()
         )
         .httpBasic(withDefaults());
