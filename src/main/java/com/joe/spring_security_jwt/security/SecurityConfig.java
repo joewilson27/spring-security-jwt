@@ -68,7 +68,7 @@ public class SecurityConfig {
     //     .httpBasic();
     //http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-
+    System.out.println("in filterChain SecurityConfig");
     http
         .csrf(csrf -> csrf.disable())
         // start handling JWT authentication
@@ -82,6 +82,7 @@ public class SecurityConfig {
         // end handling JWT authentication
         .authorizeHttpRequests( auth ->
           auth.requestMatchers("/api/auth/**").permitAll()
+              .requestMatchers("/api/test/**").permitAll()
               .anyRequest().authenticated()
         )
         .httpBasic(withDefaults());

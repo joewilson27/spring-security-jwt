@@ -31,7 +31,7 @@ public class JWTGenerator {
 		
 		String token = Jwts.builder()
                        .setSubject(username)
-                       .setIssuedAt( new Date())
+                       .setIssuedAt(currentDate)
                        .setExpiration(expireDate)
                        .signWith(key,SignatureAlgorithm.HS512)
                        .compact();

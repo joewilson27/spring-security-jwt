@@ -30,16 +30,24 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
   @Autowired
   private CustomUserDetailsService customUserDetailsService;
 
+  /**
+   * So doFilterInternal is a link in the Security Filter Chain where BEFORE we actually get to the controllers
+   * it's going to PERFORM a CHECK to SEE if there's actually a token within the header (on request) 
+   */
   @Override
   protected void doFilterInternal(HttpServletRequest request, 
                                   HttpServletResponse response, 
                                   FilterChain filterChain) throws ServletException, IOException {
-
+    System.out.println("in doFilterInternal JWTAuthenticationFilter");
+    // Get token from the request (header)
     String token = getJWTFromRequest(request);
-    if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+    if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+      // token exists, then get username from token
       String username = tokenGenerator.getUsernameFromJWT(token);
 
+      // check username from the table user
       UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -50,8 +58,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
   private String getJWTFromRequest(HttpServletRequest request) {
     // get token out from the headers
     String bearerToken = request.getHeader("Authorization");
-    if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7, bearerToken.length()); // public String substring(int start, int end)
+    String tokenType = "Bearer ";
+
+    if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(tokenType)) {
+      return bearerToken.substring(tokenType.length(), bearerToken.length()); // public String substring(int start, int end)
     }
     return null;
   }
