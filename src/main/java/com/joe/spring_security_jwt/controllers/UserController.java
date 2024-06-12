@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/user")
@@ -21,6 +22,11 @@ public class UserController {
   public String getDetails(@AuthenticationPrincipal UserDetails userDetails) {
     // sample return value
     return userDetails.getUsername();
+  }
+
+  @GetMapping("/other-details")
+  public String getOtherDetails(Authentication authentication) {
+    return "/other-details " + authentication.getName();
   }
 
 }
